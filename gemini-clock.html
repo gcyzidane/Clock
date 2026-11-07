@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Widget Clock</title>
+    <style>
+        /* 默认基础样式，会被 URL 中的 style 参数动态覆盖 */
+        body {
+            margin: 0;
+            background-color: rgba(0, 0, 0, 0);
+            display: grid;
+            justify-content: center;
+            align-content: center;
+            height: 100vh;
+            color: white;
+            font-family: monospace;
+            font-size: 32px;
+        }
+        #clock {
+            /* 预留样式接口 */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="clock">Loading...</div>
+
+    <script>
+        // 1. 获取 URL 里的参数 (?style=...&format=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // 应用自定义 CSS 样式
+        const customStyle = urlParams.get('style');
+        if (customStyle) {
+            document.body.style.cssText = customStyle;
+        }
+
+        // 获取日期格式化参数 (默认 MMM DD)
+        const formatParam = urlParams.get('format') || 'MMM DD';
+
+        // 2. 简易日期格式化函数 (支持 MMM DD 等常见组合)
+        function formatDate(date, format) {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const year = date.getFullYear();
+            const monthIndex = date.getMonth();
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            let result = format;
+            result = result.replace('YYYY', year);
+            result = result.replace('MMM', months[monthIndex]);
+            result = result.replace('DD', day);
+            // 如果链接没传 format，或者需要返回原始 ISO 字符串的效果
+            if (format === 'ISO') {
+                return date.toISOString();
+            }
+            return result;
+        }
+
+        // 3. 更新时钟内容
+        function updateClock() {
+            const now = new Date();
+            // 如果你想还原它输出 ISO 时间的效果，可以把下面这行改成 formatDate(now, 'ISO')
+            document.getElementById('clock').innerText = formatDate(now, formatParam);
+        }
+
+        // 初始化并每秒刷新
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
