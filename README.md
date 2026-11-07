@@ -1,0 +1,1 @@
+https://gcyzidane.github.io/Clock/?style=font: normal 32px monospace; font-family:"Prism"; color: white; display: grid; border-radius: 2px; justify-content: center; background-color: rgba(0,0,0, 0)&format=MMM DD
